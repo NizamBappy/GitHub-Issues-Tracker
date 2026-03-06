@@ -17,14 +17,30 @@
 </head>
 <body>
     <header>
-        <div class="navbar bg-base-100 shadow-sm">
-            <div class="navbar-start">
-                <img src="./assets/github-logo.png" alt="">
+        <div class="navbar bg-base-100 shadow-sm w-11/12 mx-auto">
+            <div class="navbar-start flex items-center gap-2">
+                <div class="w-10">
+                    <img src="./assets/github-logo.png" alt="" class="w-[100px]">
+                </div>
                 <a class="text-2xl font-bold">GitHub Issues Tracker</a>
             </div>
             
-            <div class="navbar-end">
-                <input type="text" name="" id="">
+            <div class="navbar-end space-x-5">
+                <label class="input outline-none">
+                    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g
+                        stroke-linejoin="round"
+                        stroke-linecap="round"
+                        stroke-width="2.5"
+                        fill="none"
+                        stroke="currentColor"
+                        >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                        </g>
+                    </svg>
+                    <input  type="search" required placeholder="Search issues..." />
+                </label>
                 <button class="btn btn-primary">Search</button>
             </div>
         </div>
