@@ -47,11 +47,11 @@
     </header>
 
     <main class="w-11/12 mx-auto bg-gray-100 mt-10 p-5">
-        <section class="button-container bg-white p-5">
+        <section id="btn-container" class="bg-white p-5">
             <div>
-                <button class="btn btn-primary">All</button>
-                <button class="btn btn-primary">Open</button>
-                <button class="btn btn-primary">Close</button>
+                <button id="all-btn" class="btn btn-primary">All</button>
+                <button id="open-btn" class="btn">Open</button>
+                <button id="close-btn" class="btn">Close</button>
             </div>
         </section>
 
@@ -66,6 +66,11 @@
                     <p class="text-gray-400">Track and manage your project issues</p>
                 </div>
             </div> -->
+            </div>
+
+            <div id="loading-spinner" class="h-[60vh] flex hidden justify-center    items-center " >
+                     <span class="loading loading-dots loading-xl"></span>
+
             </div>
         </section>
 
@@ -112,6 +117,7 @@
     </main>
 
     <!-- <script src="./script/login.js"></script> -->
-    <script type="module" src="./script/script.js"></script>
+    <script src="./script/script.js"></script>
+    <!-- <script src="scriptjs.js"></script> -->
 </body>
 </html>
