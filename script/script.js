@@ -4,9 +4,21 @@ const btnContainer = document.getElementById("btn-container")
 const allBtn = document.getElementById("all-btn");
 const openBtn = document.getElementById("open-btn");
 const closeBtn = document.getElementById("close-btn");
-const spinner = document.getElementById("loading-spinner")
-const detailsModal = document.getElementById("details-container")
+const spinner = document.getElementById("loading-spinner");
+const detailsModal = document.getElementById("details-container");
+const searchBtn = document.getElementById("search-btn");
+const searchInput = document.getElementById("search-input");
 const allIssues =[];
+
+
+function showLabels (arr){
+    const htmlElements =  arr.map((label) => `
+                            <span class="text-xs ${label.toLowerCase() === "bug"?"bg-red-100 text-red-600"
+                                : "bg-yellow-100 text-yellow-600"
+                            } px-4 py-1 rounded-full font-medium"> ${label}</span>`);
+    return(htmlElements.join(" "));
+}
+
 
 async function loadIssues(){
     showLoadingSpinner();
@@ -18,6 +30,15 @@ async function loadIssues(){
     hideLoadingSpinner();
     displayIssues(allIssues);
 
+}
+
+function inActive(clickedBtn){
+    const buttons = document.querySelectorAll("#btn-container button");
+
+    buttons.forEach(btn => {
+        btn.classList.remove("btn-primary");
+        btn.classList.add("btn-outline");
+    });
 }
 
 function activeBtn(clickedBtn) {
@@ -33,6 +54,7 @@ function activeBtn(clickedBtn) {
     clickedBtn.classList.remove("btn-outline");
 }
 allBtn.addEventListener("click", ()=>{
+    searchInput.value = "";
     activeBtn(allBtn);
     showLoadingSpinner();
     cardContainer.innerHTML = "";
@@ -43,6 +65,7 @@ allBtn.addEventListener("click", ()=>{
 
 
 openBtn.addEventListener("click", ()=>{
+    searchInput.value = "";
     activeBtn(openBtn);
     showLoadingSpinner();
     const openIssues = allIssues.filter(issue => issue.status === "open");
@@ -53,6 +76,7 @@ openBtn.addEventListener("click", ()=>{
 });
 
 closeBtn.addEventListener("click", ()=>{
+    searchInput.value = "";
     activeBtn(closeBtn);
     showLoadingSpinner();
     const closedIssues = allIssues.filter(issue => issue.status === "closed");
@@ -83,19 +107,13 @@ function displayIssueDetail(issue){
     <div class=" space-y-5">
             <h1 class="text-3xl font-bold">${issue.title}</h1>
             <div class="flex gap-3">
-                <button class="bg-green-600 text-white rounded full px-4 py-1s">${issue.status}</button>
+                <button class="bg-green-600 text-white rounded full px-4 py-1">${issue.status}</button>
                 <p class="font-semibold text-gray-400">. ${issue.assignee} .</p>
                 <p class="font-semibold text-gray-400">${issue.createdAt}</p>
             </div>
 
             <div>
-                <span class="text-xs bg-red-100 text-red-600 px-4 py-1 rounded-full font-medium">
-                            BUG
-                </span>
-
-                <span class="text-xs bg-yellow-100 text-yellow-600 px-4 py-1 rounded-full font-medium">
-                    Help Wanted
-                </span>
+                ${showLabels(issue.labels)}
             </div>
 
             <p class="text-gray-400">${issue.description}</p>
@@ -145,13 +163,8 @@ function displayIssues(issues){
                     </p>
 
                     <div class="flex gap-2 mb-4">
-                    <span class="text-xs bg-red-100 text-red-600 px-3 py-1 rounded-full font-medium">
-                        BUG
-                    </span>
-
-                    <span class="text-xs bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full font-medium">
-                        ${issue.labels}
-                    </span>
+                        
+                        ${showLabels(issue.labels)}
                     </div>
 
                     <div class="border-t pt-3 text-xs text-gray-400">
@@ -182,6 +195,16 @@ function total (issues){
     totalIssues.appendChild(div)
 }
 
-
-
 loadIssues();
+
+searchBtn.addEventListener("click", async function(){
+    inActive();
+    const searchValue = searchInput.value.trim().toLowerCase();
+    // console.log(searchValue);
+    const url =`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchValue}`;
+    const res = await fetch(url)
+    const data = await res.json()
+    const issues = data.data;
+    const searchIssue = issues.filter(issue => issue.title.toLowerCase().includes(searchValue));
+    displayIssues(searchIssue);
+})
