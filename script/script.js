@@ -102,14 +102,18 @@ async function loadIssueDetails(id){
 }
 
 function displayIssueDetail(issue){
-    console.log(issue)
+    // console.log(issue)
+    
     detailsModal.innerHTML = `
     <div class=" space-y-5">
             <h1 class="text-3xl font-bold">${issue.title}</h1>
             <div class="flex gap-3">
-                <button class="bg-green-600 text-white rounded-full px-4 py-1">${issue.status}</button>
-                <p class="font-semibold text-gray-400">. ${issue.assignee} .</p>
-                <p class="font-semibold text-gray-400">${issue.createdAt}</p>
+                <button class="${issue.status.toLowerCase() === "open"
+                                ?"bg-green-600"
+                                :"bg-purple-600"} text-white rounded-full px-4 py-1">${issue.status.toUpperCase()}
+                </button>
+                <p class="font-semibold text-gray-400">. ${issue.author?issue.author:" Author Unknown"} .</p>
+                <p class="font-semibold text-gray-400">${new Date(issue.createdAt).toLocaleDateString("en-GB")}</p>
             </div>
 
             <div>
@@ -121,17 +125,17 @@ function displayIssueDetail(issue){
             <div class="flex gap-10 bg-[#F8FAFC] p-4">
                 <div>
                     <p class="text-gray-400">Assignee:</p>
-                    <h3 class="font-bold text-2xl">${issue.assignee}</h3>
+                    <h3 class="font-bold text-2xl">${issue.assignee?issue.assignee:"Unknown"}</h3>
                 </div>
                 <div>
                     <p>Priority:</p>
                     <button class="${issue.priority.toLowerCase() === "high"
-                        ?"BG-red-600"
+                        ?"bg-red-600"
                         :issue.priority.toLowerCase() === "medium"
-                        ?"bg-yellow-600"
+                        ?"bg-yellow-400"
                         :"bg-gray-500"
                         } rounded-2xl text-white text-bold px-4 py-1">
-                    ${issue.priority}
+                    ${issue.priority?issue.priority.toUpperCase():"Unknown"}
                     </button>
                 </div>
             </div>
@@ -148,21 +152,22 @@ function displayIssues(issues){
         // console.log(issue)
         
         const div = document.createElement("div")
-        div.innerHTML =`<div class="w-full md:w-80 h-full bg-white rounded-xl shadow-md border-t-4  ${issue.status === "open" ? "border-green-500" : "border-[#A855F7]"} p-4 " onclick="loadIssueDetails(${issue.id})">
+        div.innerHTML =`<div class="w-full md:w-full h-full bg-white rounded-xl shadow-md border-t-4  ${issue.status.toLowerCase() === "open" ? "border-green-500" : "border-[#A855F7]"} p-4 flex flex-col" onclick="loadIssueDetails(${issue.id})">
 
+                <div>
                     <div class="flex justify-between items-center mb-3">
-                    <div>
-                       <img src="${issue.status === "open" ? "./assets/Open-Status.png" : "./assets/Closed-Status.png"}" alt=""/>
-                    </div>
+                        <div>
+                            <img src="${issue.status === "open" ? "./assets/Open-Status.png" : "./assets/Closed-Status.png"}" alt=""/>
+                        </div>
 
-                    <span class="${issue.priority.toLowerCase() === "high"
+                        <span class="${issue.priority.toLowerCase() === "high"
                         ?"bg-red-100 text-red-600"
                         :issue.priority.toLowerCase() === "medium"
                         ?"bg-yellow-100 text-yellow-600"
                         :"bg-gray-100 text-gray-600"
                         } text-xs px-3 py-1 rounded-full font-semibold">
                         ${issue.priority}
-                    </span>
+                        </span>
                     </div>
 
                     <h2 class="font-semibold text-gray-800 text-lg mb-2">
@@ -176,13 +181,15 @@ function displayIssues(issues){
                         
                         ${showLabels(issue.labels)}
                     </div>
+                </div>
+                <div class="mt-auto">
+                    <div class=" h-px  bg-gray-200 mb-4"></div>
+                        <span># ${issue.id} ${issue.author?issue.author:"Author Unknown"}</span> <br>
+                        <span>${new Date(issue.createdAt).toLocaleDateString("en-GB")}</span>
+                </div>
+                    
 
-                    <div class="border-t pt-3 text-xs text-gray-400">
-                    <span># ${issue.id} ${issue.author}</span> <br>
-                    <span>${new Date(issue.createdAt).toLocaleDateString("en-GB")}</span>
-                    </div>
-
-                </div>`
+            </div>`
         cardContainer.appendChild(div);        
     })
     total(issues);
@@ -193,7 +200,7 @@ function total (issues){
     // totalIssues.innerHTML =issues.length
     totalIssues.innerHTML = "";
     const div = document.createElement("div");
-    div.innerHTML = `<div class="flex justify-between items-center">
+    div.innerHTML = `<div class="flex flex-col gap-3 md:flex-row justify-between items-center">
                 <div class="flex items-center gap-5">
                     <div class="bg-[#ECE4FF] rounded-full p-3 flex items-center justify-center">
                         <img src="../assets/Aperture.png">
