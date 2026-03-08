@@ -11,9 +11,10 @@ logInBtn.addEventListener("click", function(){
     if(userName === "admin" && password === "admin123"){
         alert("login successful")
         // window.location.replace("/home.html")
-        window.location.assign("#/home.html");
+        window.location.assign("./home/index.html");
     }else{
         alert("username or pass wrong")
         return;
     }
 })
+

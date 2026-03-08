@@ -196,7 +196,7 @@ function total (issues){
     div.innerHTML = `<div class="flex justify-between items-center">
                 <div class="flex items-center gap-5">
                     <div class="bg-[#ECE4FF] rounded-full p-3 flex items-center justify-center">
-                        <img src="./assets/Aperture.png">
+                        <img src="../assets/Aperture.png">
                     </div>
                     <div>
                         <h3 class="font-bold text-2xl">${issues.length} Issues</h3>
