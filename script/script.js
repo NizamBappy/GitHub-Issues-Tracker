@@ -32,7 +32,7 @@ async function loadIssues(){
 
 }
 
-function inActive(clickedBtn){
+function inActive(){
     const buttons = document.querySelectorAll("#btn-container button");
 
     buttons.forEach(btn => {
@@ -107,7 +107,7 @@ function displayIssueDetail(issue){
     <div class=" space-y-5">
             <h1 class="text-3xl font-bold">${issue.title}</h1>
             <div class="flex gap-3">
-                <button class="bg-green-600 text-white rounded full px-4 py-1">${issue.status}</button>
+                <button class="bg-green-600 text-white rounded-full px-4 py-1">${issue.status}</button>
                 <p class="font-semibold text-gray-400">. ${issue.assignee} .</p>
                 <p class="font-semibold text-gray-400">${issue.createdAt}</p>
             </div>
@@ -120,12 +120,17 @@ function displayIssueDetail(issue){
 
             <div class="flex gap-10 bg-[#F8FAFC] p-4">
                 <div>
-                    <p class="text-gray-400">Assigne:</p>
+                    <p class="text-gray-400">Assignee:</p>
                     <h3 class="font-bold text-2xl">${issue.assignee}</h3>
                 </div>
                 <div>
                     <p>Priority:</p>
-                    <button class="bg-red-500 rounded-2xl text-white text-bold px-4 py-1">
+                    <button class="${issue.priority.toLowerCase() === "high"
+                        ?"BG-red-600"
+                        :issue.priority.toLowerCase() === "medium"
+                        ?"bg-yellow-600"
+                        :"bg-gray-500"
+                        } rounded-2xl text-white text-bold px-4 py-1">
                     ${issue.priority}
                     </button>
                 </div>
@@ -143,14 +148,19 @@ function displayIssues(issues){
         // console.log(issue)
         
         const div = document.createElement("div")
-        div.innerHTML =`<div class="w-80 h-full bg-white rounded-xl shadow-md border-t-4  ${issue.status === "open" ? "border-green-500" : "border-red-500"} p-4 " onclick="loadIssueDetails(${issue.id})">
+        div.innerHTML =`<div class="w-full md:w-80 h-full bg-white rounded-xl shadow-md border-t-4  ${issue.status === "open" ? "border-green-500" : "border-[#A855F7]"} p-4 " onclick="loadIssueDetails(${issue.id})">
 
                     <div class="flex justify-between items-center mb-3">
                     <div>
                        <img src="${issue.status === "open" ? "./assets/Open-Status.png" : "./assets/Closed-Status.png"}" alt=""/>
                     </div>
 
-                    <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full font-semibold">
+                    <span class="${issue.priority.toLowerCase() === "high"
+                        ?"bg-red-100 text-red-600"
+                        :issue.priority.toLowerCase() === "medium"
+                        ?"bg-yellow-100 text-yellow-600"
+                        :"bg-gray-100 text-gray-600"
+                        } text-xs px-3 py-1 rounded-full font-semibold">
                         ${issue.priority}
                     </span>
                     </div>
@@ -168,8 +178,8 @@ function displayIssues(issues){
                     </div>
 
                     <div class="border-t pt-3 text-xs text-gray-400">
-                    <span>${issue.author}</span> <br>
-                    <span>${issue.createdAt}</span>
+                    <span># ${issue.id} ${issue.author}</span> <br>
+                    <span>${new Date(issue.createdAt).toLocaleDateString("en-GB")}</span>
                     </div>
 
                 </div>`
@@ -183,13 +193,25 @@ function total (issues){
     // totalIssues.innerHTML =issues.length
     totalIssues.innerHTML = "";
     const div = document.createElement("div");
-    div.innerHTML = `<div class="flex items-center gap-5">
-                <div class="bg-[#ECE4FF] rounded-full p-3 flex items-center justify-center">
-                    <img src="./assets/Aperture.png">
+    div.innerHTML = `<div class="flex justify-between items-center">
+                <div class="flex items-center gap-5">
+                    <div class="bg-[#ECE4FF] rounded-full p-3 flex items-center justify-center">
+                        <img src="./assets/Aperture.png">
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-2xl">${issues.length} Issues</h3>
+                        <p class="text-gray-400">Track and manage your project issues</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="font-bold text-2xl">${issues.length} Issues</h3>
-                    <p class="text-gray-400">Track and manage your project issues</p>
+                <div class="flex gap-5">
+                    <div class="flex gap-1 items-center">
+                        <div class="badge bg-green-500 badge-sm"></div>
+                        <p class="text-xl text-gray-500 font-medium">Open</p>
+                    </div>
+                    <div class="flex gap-1 items-center">
+                        <div class="badge bg-purple-500 badge-sm "></div>
+                        <p class="text-xl text-gray-500 font-medium">Closed</p>
+                    </div>
                 </div>
             </div>`
     totalIssues.appendChild(div)
