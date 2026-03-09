@@ -1,15 +1,4 @@
-const cardContainer = document.getElementById("card-container");
-const totalIssues = document.getElementById("total-issues");
-const btnContainer = document.getElementById("btn-container")
-const allBtn = document.getElementById("all-btn");
-const openBtn = document.getElementById("open-btn");
-const closeBtn = document.getElementById("close-btn");
-const spinner = document.getElementById("loading-spinner");
-const detailsModal = document.getElementById("details-container");
-const searchBtn = document.getElementById("search-btn");
-const searchInput = document.getElementById("search-input");
 const allIssues =[];
-
 
 function showLabels (arr){
     const htmlElements =  arr.map((label) => `
@@ -18,7 +7,6 @@ function showLabels (arr){
                             } px-4 py-1 rounded-full font-medium"> ${label}</span>`);
     return(htmlElements.join(" "));
 }
-
 
 async function loadIssues(){
     showLoadingSpinner();
@@ -32,28 +20,8 @@ async function loadIssues(){
 
 }
 
-function inActive(){
-    const buttons = document.querySelectorAll("#btn-container button");
 
-    buttons.forEach(btn => {
-        btn.classList.remove("btn-primary");
-        btn.classList.add("btn-outline");
-    });
-}
-
-function activeBtn(clickedBtn) {
-    
-    const buttons = document.querySelectorAll("#btn-container button");
-
-    buttons.forEach(btn => {
-        btn.classList.remove("btn-primary");
-        btn.classList.add("btn-outline");
-    });
-
-    clickedBtn.classList.add("btn-primary");
-    clickedBtn.classList.remove("btn-outline");
-}
-allBtn.addEventListener("click", ()=>{
+allBtn.addEventListener("click", function(){
     searchInput.value = "";
     activeBtn(allBtn);
     showLoadingSpinner();
@@ -63,8 +31,7 @@ allBtn.addEventListener("click", ()=>{
 });
 
 
-
-openBtn.addEventListener("click", ()=>{
+openBtn.addEventListener("click", function(){
     searchInput.value = "";
     activeBtn(openBtn);
     showLoadingSpinner();
@@ -75,7 +42,7 @@ openBtn.addEventListener("click", ()=>{
 
 });
 
-closeBtn.addEventListener("click", ()=>{
+closeBtn.addEventListener("click", function(){
     searchInput.value = "";
     activeBtn(closeBtn);
     showLoadingSpinner();
@@ -85,13 +52,7 @@ closeBtn.addEventListener("click", ()=>{
     displayIssues(closedIssues);
 });
 
-function showLoadingSpinner(){
-    spinner.classList.remove("hidden");
-    cardContainer.innerHTML = "";
-}
-function hideLoadingSpinner(){
-    spinner.classList.add("hidden");
-}
+
 
 async function loadIssueDetails(id){
     const url = `https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`;
@@ -103,7 +64,6 @@ async function loadIssueDetails(id){
 
 function displayIssueDetail(issue){
     // console.log(issue)
-    
     detailsModal.innerHTML = `
     <div class=" space-y-5">
             <h1 class="text-3xl font-bold">${issue.title}</h1>
@@ -141,7 +101,9 @@ function displayIssueDetail(issue){
             </div>
 
         </div>`
+        
         document.getElementById("issue_modal").showModal();
+        
 }
 
 function displayIssues(issues){
@@ -230,10 +192,12 @@ searchBtn.addEventListener("click", async function(){
     inActive();
     const searchValue = searchInput.value.trim().toLowerCase();
     // console.log(searchValue);
+    showLoadingSpinner();
     const url =`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchValue}`;
     const res = await fetch(url)
     const data = await res.json()
     const issues = data.data;
     const searchIssue = issues.filter(issue => issue.title.toLowerCase().includes(searchValue));
     displayIssues(searchIssue);
+    hideLoadingSpinner();
 })
